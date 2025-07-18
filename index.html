@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="converter-wrapper">
+        <header>
+            <h1>Unit Converter</h1>
+        </header>
+        <main>
+            <div class="category-tabs" id="category-tabs">
+                <button data-category="length" class="active">Length</button>
+                <button data-category="weight">Weight</button>
+                <button data-category="volume">Volume</button>
+                <button data-category="temperature">Temperature</button>
+            </div>
+
+            <div class="converter-body">
+                <div class="converter-group" id="group-us">
+                    <label for="input-us">US</label>
+                    <input type="number" id="input-us" placeholder="0">
+                    <select id="unit-us"></select>
+                </div>
+
+                <div class="equals-sign">=</div>
+
+                <div class="converter-group" id="group-jp">
+                    <label for="input-jp">Japan</label>
+                    <input type="number" id="input-jp" placeholder="0">
+                    <select id="unit-jp"></select>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; 2025 Gemini CLI</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
