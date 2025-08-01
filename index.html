@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unit Converter</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google tag (gtag.js) -->
+    <script src="config.js"></script>
+    <script>
+      // Dynamically write the gtag script tag if GTM_ID is available
+      if (window.GTM_ID) {
+        document.write('<script async src="https://www.googletagmanager.com/gtag/js?id=' + window.GTM_ID + '"><\/script>');
+      }
+    </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Configure gtag only if GTM_ID is available
+      if (window.GTM_ID) {
+        gtag('config', window.GTM_ID);
+      }
+    </script>
 </head>
 <body>
     <div class="converter-wrapper">
@@ -36,7 +54,7 @@
             </div>
         </main>
         <footer>
-            <p>&copy; 2025 Gemini CLI</p>
+            <p>&copy; 2025 cuio.net</p>
         </footer>
     </div>
     <script src="script.js"></script>
