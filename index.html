@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit Converter</title>
-    <link rel="stylesheet" href="style.css">
+    <title>日米単位変換器 | US-Japan Unit Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?202608031208">
     <!-- Google tag (gtag.js) -->
     <script src="config.js"></script>
     <script>
@@ -27,36 +30,79 @@
 <body>
     <div class="converter-wrapper">
         <header>
+            <div class="header-badge">US ↔ JP</div>
             <h1>Unit Converter</h1>
+            <p class="subtitle">日米単位相互変換</p>
         </header>
         <main>
             <div class="category-tabs" id="category-tabs">
-                <button data-category="length" class="active">Length</button>
-                <button data-category="weight">Weight</button>
-                <button data-category="volume">Volume</button>
-                <button data-category="temperature">Temperature</button>
+                <button data-category="length" class="active">
+                    <span class="tab-jp">長さ</span>
+                    <span class="tab-en">Length</span>
+                </button>
+                <button data-category="weight">
+                    <span class="tab-jp">重さ</span>
+                    <span class="tab-en">Weight</span>
+                </button>
+                <button data-category="volume">
+                    <span class="tab-jp">量</span>
+                    <span class="tab-en">Volume</span>
+                </button>
+                <button data-category="area">
+                    <span class="tab-jp">面積</span>
+                    <span class="tab-en">Area</span>
+                </button>
+                <button data-category="temperature">
+                    <span class="tab-jp">温度</span>
+                    <span class="tab-en">Temp</span>
+                </button>
             </div>
 
             <div class="converter-body">
                 <div class="converter-group" id="group-us">
-                    <label for="input-us">US</label>
-                    <input type="number" id="input-us" placeholder="0">
+                    <div class="group-header">
+                        <label for="input-us">US <span class="country-sub">アメリカ</span></label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-us" placeholder="0" step="any">
+                    </div>
                     <select id="unit-us"></select>
                 </div>
 
-                <div class="equals-sign">=</div>
+                <div class="swap-container">
+                    <button id="swap-btn" class="swap-button" title="単位・方向を入れ替え" aria-label="Swap units">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="17 1 21 5 17 9"></polyline>
+                            <line x1="3" y1="5" x2="21" y2="5"></line>
+                            <polyline points="7 23 3 19 7 15"></polyline>
+                            <line x1="21" y1="19" x2="3" y2="19"></line>
+                        </svg>
+                    </button>
+                </div>
 
                 <div class="converter-group" id="group-jp">
-                    <label for="input-jp">Japan</label>
-                    <input type="number" id="input-jp" placeholder="0">
+                    <div class="group-header">
+                        <label for="input-jp">Japan <span class="country-sub">日本</span></label>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-jp" placeholder="0" step="any">
+                    </div>
                     <select id="unit-jp"></select>
+                </div>
+            </div>
+
+            <div class="formula-card" id="formula-card">
+                <div class="formula-icon">💡</div>
+                <div class="formula-content">
+                    <span class="formula-label">基準変換比率</span>
+                    <span class="formula-text" id="formula-text">1 in = 2.54 cm</span>
                 </div>
             </div>
         </main>
         <footer>
-            <p>&copy; 2025 cuio.net</p>
+            <p>&copy; 2025 cuio.net | 日米単位変換器</p>
         </footer>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?202608031208"></script>
 </body>
 </html>

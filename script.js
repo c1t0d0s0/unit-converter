@@ -5,32 +5,73 @@ document.addEventListener('DOMContentLoaded', () => {
         unitUS: document.getElementById('unit-us'),
         inputJP: document.getElementById('input-jp'),
         unitJP: document.getElementById('unit-jp'),
+        swapBtn: document.getElementById('swap-btn'),
+        formulaText: document.getElementById('formula-text'),
     };
 
     let currentCategory = 'length';
-    let activeInput = null;
+    let activeInput = elements.inputUS;
 
     const units = {
         length: {
-            us: { 'in': 'Inches', 'ft': 'Feet', 'yd': 'Yards', 'mi': 'Miles' },
-            jp: { 'cm': 'Centimeters', 'm': 'Meters', 'km': 'Kilometers' }
+            us: {
+                'in': 'インチ (in)',
+                'ft': 'フィート (ft)',
+                'yd': 'ヤード (yd)',
+                'mi': 'マイル (mi)'
+            },
+            jp: {
+                'cm': 'センチメートル (cm)',
+                'm': 'メートル (m)',
+                'km': 'キロメートル (km)'
+            }
         },
         weight: {
-            us: { 'oz': 'Ounces', 'lb': 'Pounds' },
-            jp: { 'g': 'Grams', 'kg': 'Kilograms' }
+            us: {
+                'oz': 'オンス (oz)',
+                'lb': 'ポンド (lb)'
+            },
+            jp: {
+                'g': 'グラム (g)',
+                'kg': 'キログラム (kg)'
+            }
         },
         volume: {
-            us: { 'oz': 'Fluid Ounces', 'pint': 'Pints', 'qt': 'Quarts', 'gal': 'Gallons' },
-            jp: { 'ml': 'Milliliters', 'l': 'Liters' }
+            us: {
+                'oz': '液量オンス (fl oz)',
+                'pint': 'パイント (pt)',
+                'qt': 'クォート (qt)',
+                'gal': 'ガロン (gal)'
+            },
+            jp: {
+                'ml': 'ミリリットル (mL)',
+                'l': 'リットル (L)'
+            }
+        },
+        area: {
+            us: {
+                'sq_in': '平方インチ (in²)',
+                'sq_ft': '平方フィート (ft²)',
+                'sq_yd': '平方ヤード (yd²)',
+                'acre': 'エーカー (acre)',
+                'sq_mi': '平方マイル (mi²)'
+            },
+            jp: {
+                'cm2': '平方センチ (cm²)',
+                'm2': '平方メートル (m²)',
+                'km2': '平方キロ (km²)',
+                'ha': 'ヘクタール (ha)',
+                'tsubo': '坪 (tsubo)'
+            }
         },
         temperature: {
-            us: { 'f': 'Fahrenheit' },
-            jp: { 'c': 'Celsius' }
+            us: { 'f': '華氏 (℉)' },
+            jp: { 'c': '摂氏 (℃)' }
         }
     };
 
     const conversionFactors = {
-        // Base unit: meter
+        // Base unit: meter (m)
         length: {
             m: 1,
             cm: 0.01,
@@ -38,24 +79,48 @@ document.addEventListener('DOMContentLoaded', () => {
             in: 0.0254,
             ft: 0.3048,
             yd: 0.9144,
-            mi: 1609.34
+            mi: 1609.344
         },
-        // Base unit: gram
+        // Base unit: gram (g)
         weight: {
             g: 1,
             kg: 1000,
-            oz: 28.3495,
-            lb: 453.592
+            oz: 28.349523125,
+            lb: 453.59237
         },
-        // Base unit: liter
+        // Base unit: liter (L)
         volume: {
             l: 1,
             ml: 0.001,
-            oz: 0.0295735,
-            pint: 0.473176,
-            qt: 0.946353,
-            gal: 3.78541
+            oz: 0.0295735295625,
+            pint: 0.473176473,
+            qt: 0.946352946,
+            gal: 3.785411784
+        },
+        // Base unit: square meter (m²)
+        area: {
+            m2: 1,
+            cm2: 0.0001,
+            km2: 1000000,
+            ha: 10000,
+            tsubo: 3.305785,
+            sq_in: 0.00064516,
+            sq_ft: 0.09290304,
+            sq_yd: 0.83612736,
+            acre: 4046.8564224,
+            sq_mi: 2589988.110336
         }
+    };
+
+    // Short symbol mappings for clean formula display
+    const unitSymbols = {
+        in: 'in', ft: 'ft', yd: 'yd', mi: 'mi',
+        cm: 'cm', m: 'm', km: 'km',
+        oz: 'oz', lb: 'lb', g: 'g', kg: 'kg',
+        pint: 'pt', qt: 'qt', gal: 'gal', ml: 'mL', l: 'L',
+        sq_in: 'in²', sq_ft: 'ft²', sq_yd: 'yd²', acre: 'acre', sq_mi: 'mi²',
+        cm2: 'cm²', m2: 'm²', km2: 'km²', ha: 'ha', tsubo: '坪',
+        f: '℉', c: '℃'
     };
 
     function populateUnits() {
@@ -78,13 +143,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function formatNumber(num) {
+        if (isNaN(num)) return '';
+        if (num === 0) return '0';
+        
+        const absNum = Math.abs(num);
+        if (absNum < 0.000001 || absNum >= 1000000000) {
+            return num.toExponential(4);
+        }
+
+        // Clean precision formatting: up to 6 decimal places, removing trailing zeros
+        const formatted = Number(Math.round(parseFloat(num + 'e6')) + 'e-6');
+        return formatted.toString();
+    }
+
+    function updateFormulaDisplay(usUnit, jpUnit) {
+        const symbolUS = unitSymbols[usUnit] || usUnit;
+        const symbolJP = unitSymbols[jpUnit] || jpUnit;
+
+        if (currentCategory === 'temperature') {
+            elements.formulaText.textContent = `℃ = (℉ - 32) × 5/9  |  ℉ = (℃ × 9/5) + 32`;
+            return;
+        }
+
+        const factors = conversionFactors[currentCategory];
+        // Calculate 1 US unit in JP unit
+        const oneUSToJP = factors[usUnit] / factors[jpUnit];
+        const formattedJP = formatNumber(oneUSToJP);
+
+        elements.formulaText.textContent = `1 ${symbolUS} = ${formattedJP} ${symbolJP}`;
+    }
+
     function convert() {
         if (!activeInput) return;
 
-        const sourceInput = activeInput;
-        const targetInput = (sourceInput === elements.inputUS) ? elements.inputJP : elements.inputUS;
-        const sourceUnit = (sourceInput === elements.inputUS) ? elements.unitUS.value : elements.unitJP.value;
-        const targetUnit = (targetInput === elements.inputJP) ? elements.unitJP.value : elements.unitUS.value;
+        const isUSSource = (activeInput === elements.inputUS);
+        const sourceInput = isUSSource ? elements.inputUS : elements.inputJP;
+        const targetInput = isUSSource ? elements.inputJP : elements.inputUS;
+        const usUnit = elements.unitUS.value;
+        const jpUnit = elements.unitJP.value;
+
+        updateFormulaDisplay(usUnit, jpUnit);
+
         const sourceValue = parseFloat(sourceInput.value);
 
         if (isNaN(sourceValue)) {
@@ -95,31 +195,48 @@ document.addEventListener('DOMContentLoaded', () => {
         let result;
 
         if (currentCategory === 'temperature') {
-            if (sourceUnit === 'f') { // F to C
+            if (isUSSource) { // F to C
                 result = (sourceValue - 32) * 5 / 9;
             } else { // C to F
                 result = (sourceValue * 9 / 5) + 32;
             }
         } else {
             const factors = conversionFactors[currentCategory];
-            const baseValue = sourceValue * factors[sourceUnit];
-            result = baseValue / factors[targetUnit];
+            const sourceUnitKey = isUSSource ? usUnit : jpUnit;
+            const targetUnitKey = isUSSource ? jpUnit : usUnit;
+
+            const baseValue = sourceValue * factors[sourceUnitKey];
+            result = baseValue / factors[targetUnitKey];
         }
         
-        if (result % 1 !== 0) {
-            targetInput.value = result.toFixed(3);
+        targetInput.value = formatNumber(result);
+    }
+
+    function swapUnits() {
+        // Swap values
+        const tempVal = elements.inputUS.value;
+        elements.inputUS.value = elements.inputJP.value;
+        elements.inputJP.value = tempVal;
+
+        // Toggle active input direction
+        if (activeInput === elements.inputUS) {
+            activeInput = elements.inputJP;
         } else {
-            targetInput.value = result;
+            activeInput = elements.inputUS;
         }
+
+        convert();
     }
 
     elements.categoryTabs.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            currentCategory = e.target.dataset.category;
+        const btn = e.target.closest('button');
+        if (btn && btn.dataset.category) {
+            currentCategory = btn.dataset.category;
             
             // Update active button style
-            document.querySelector('.category-tabs button.active').classList.remove('active');
-            e.target.classList.add('active');
+            const currentActive = elements.categoryTabs.querySelector('button.active');
+            if (currentActive) currentActive.classList.remove('active');
+            btn.classList.add('active');
 
             populateUnits();
             convert();
@@ -135,16 +252,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     [elements.unitUS, elements.unitJP].forEach(select => {
         select.addEventListener('change', () => {
-            // When a unit changes, we need to determine which input was the last active one
-            // to decide the direction of conversion.
             if (activeInput) {
                 convert();
             }
         });
     });
 
+    if (elements.swapBtn) {
+        elements.swapBtn.addEventListener('click', swapUnits);
+    }
+
     // Initial setup
     populateUnits();
-    activeInput = elements.inputUS; // Set a default active input
-
+    activeInput = elements.inputUS;
+    convert();
 });
+
