@@ -254,16 +254,28 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function detectInitialLanguage() {
-        const saved = localStorage.getItem('user_lang');
-        if (saved === 'ja' || saved === 'en') {
-            return saved;
-        }
-
-        const browserLanguages = navigator.languages || [navigator.language || navigator.userLanguage || ''];
-        for (const lang of browserLanguages) {
-            if (lang && lang.toLowerCase().startsWith('ja')) {
-                return 'ja';
+        // 1. URL parameter check (?lang=en or ?lang=ja)
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlLang = urlParams.get('lang');
+            if (urlLang === 'ja' || urlLang === 'en') {
+                return urlLang;
             }
+        } catch (e) {}
+
+        // 2. Saved user preference from manual toggle button
+        try {
+            const saved = localStorage.getItem('user_lang_selected');
+            if (saved === 'ja' || saved === 'en') {
+                return saved;
+            }
+        } catch (e) {}
+
+        // 3. Detect primary browser language
+        // navigator.language represents the user's primary/preferred UI language
+        const primaryLang = (navigator.language || (navigator.languages && navigator.languages[0]) || navigator.userLanguage || '').toLowerCase();
+        if (primaryLang.startsWith('ja')) {
+            return 'ja';
         }
         return 'en';
     }
@@ -271,7 +283,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function setLanguage(lang, persist = false) {
         currentLang = lang;
         if (persist) {
-            localStorage.setItem('user_lang', lang);
+            try {
+                localStorage.setItem('user_lang_selected', lang);
+            } catch (e) {}
         }
 
         document.documentElement.lang = lang;
