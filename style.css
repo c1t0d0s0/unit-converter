@@ -65,6 +65,47 @@ header {
     position: relative;
 }
 
+.lang-switch {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    background: rgba(10, 13, 20, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 0.2rem 0.45rem;
+}
+
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.2rem 0.45rem;
+    border-radius: 12px;
+    transition: all var(--transition-fast);
+}
+
+.lang-btn:hover {
+    color: var(--text-main);
+}
+
+.lang-btn.active {
+    color: #0b0d14;
+    background: var(--accent-gradient);
+    font-weight: 700;
+}
+
+.lang-divider {
+    color: var(--text-sub);
+    font-size: 0.7rem;
+    user-select: none;
+}
+
 .header-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
@@ -136,6 +177,10 @@ main {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 2px;
+}
+
+.category-tabs button .tab-en:empty {
+    display: none;
 }
 
 .category-tabs button:hover {
@@ -333,6 +378,17 @@ footer {
 
     header {
         padding: 1.8rem 1.2rem 1.2rem;
+    }
+
+    .lang-switch {
+        top: 1.2rem;
+        right: 1.2rem;
+        padding: 0.15rem 0.35rem;
+    }
+
+    .lang-btn {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.35rem;
     }
 
     header h1 {

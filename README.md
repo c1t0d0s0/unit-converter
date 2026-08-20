@@ -9,6 +9,7 @@ This is a web-based unit converter that allows for mutual conversion between Jap
     - Weight (oz/lb ⇔ g/kg)
     - Volume (oz/pint/qt/gal ⇔ mL/L)
     - Temperature (°F ⇔ °C)
+- **Multi-language Support**: Automatically detects browser language (Japanese / English) with manual language switcher (JP / EN).
 - **Responsive Design**: Optimized for a seamless experience on both desktop and smartphone screens.
 - **Sleek Design**: Features a simple, modern, and cool design with a dark theme.
 
