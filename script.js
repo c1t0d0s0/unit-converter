@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             jpSub: '日本',
             swapTitle: '単位・方向を入れ替え',
             formulaLabel: '基準変換比率',
-            footer: '&copy; 2025 cuio.net | 日米単位変換器',
+            footer: '&copy; 2026 c1t0d0s0 | 日米単位変換器',
             units: {
                 length: {
                     us: {
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             jpSub: 'Metric / JP',
             swapTitle: 'Swap units',
             formulaLabel: 'Conversion Rate',
-            footer: '&copy; 2025 cuio.net | US-Japan Unit Converter',
+            footer: '&copy; 2026 c1t0d0s0 | US-Japan Unit Converter',
             units: {
                 length: {
                     us: {
